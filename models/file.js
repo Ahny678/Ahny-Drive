@@ -1,8 +1,8 @@
 const { Model, DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
-const User = require("./user");
+const { sequelize } = require("../config/database");
 const Folder = require("./folder");
-
+const User = require("./user");
+console.log("Sequelize instance:", sequelize);
 class File extends Model {}
 
 File.init(
@@ -51,6 +51,7 @@ File.belongsTo(Folder, {
     allowNull: true,
     type: DataTypes.UUID,
   },
+  constraints: false,
 });
 
 Folder.hasMany(File, {

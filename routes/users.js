@@ -14,7 +14,4 @@ router.post(
 router.get("/signup", userController.getSignupPage);
 router.post("/signup", userController.postSignupPage);
 
-router.get("/upload", userController.getUpload);
-router.post("/upload", userController.uploadVid);
-
 module.exports = router;

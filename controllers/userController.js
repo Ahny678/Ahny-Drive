@@ -1,7 +1,3 @@
-const multer = require("multer");
-const uploadVideo = multer({
-  dest: "/home/tiffany/repos/Ahny-Drive/public/data/videos",
-});
 require("dotenv").config();
 const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
@@ -64,12 +60,10 @@ exports.postSignupPage = [
         email: email,
         password: password,
       });
-      res
-        .status(201)
-        .json({
-          message: `New user created succesfully`,
-          user: newUser.username,
-        });
+      res.status(201).json({
+        message: `New user created succesfully`,
+        user: newUser.username,
+      });
     } catch (err) {
       res
         .status(500)
@@ -79,24 +73,3 @@ exports.postSignupPage = [
 ];
 
 //------------------------------------------------------------------------------------
-exports.uploadVid = [
-  uploadVideo.single("video"),
-  (req, res) => {
-    try {
-      if (req.file) {
-        res.status(200).json({ messae: "File uploaded succesfully" });
-      } else {
-        return res
-          .status(400)
-          .json({ message: "Bad request. pleasse upload a file" });
-      }
-    } catch (err) {
-      res
-        .status(500)
-        .json({ message: "Internal server error", error: err.message });
-    }
-  },
-];
-exports.getUpload = (req, res) => {
-  res.render("upload");
-};

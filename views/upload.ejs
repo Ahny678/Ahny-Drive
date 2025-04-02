@@ -6,10 +6,47 @@
     <title>Upload File</title>
   </head>
   <body>
-    <form action="" method="post" enctype="multipart/form-data">
-      <label for="video">Upload video</label>
-      <input type="file" name="video" />
+    <form
+      id="uploadForm"
+      action="/Adrive/<%= userId %>/upload"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <label for="fileType">Select file type:</label>
+      <select id="fileType" name="fileType">
+        <option value="video">Video</option>
+        <option value="photo">Photo</option>
+        <option value="document">Document</option>
+      </select>
+
+      <label for="fileCount">Number of files:</label>
+      <input type="number" id="fileCount" name="fileCount" min="1" value="1" />
+
+      <div id="fileInputs">
+        <label>Upload file:</label>
+        <input type="file" name="files" multiple />
+      </div>
+
       <button type="submit">Upload</button>
     </form>
+
+    <script>
+      document
+        .getElementById("fileCount")
+        .addEventListener("input", function () {
+          let fileCount = this.value;
+          let fileInputsDiv = document.getElementById("fileInputs");
+          fileInputsDiv.innerHTML = "";
+
+          for (let i = 0; i < fileCount; i++) {
+            let input = document.createElement("input");
+            input.type = "file";
+            input.name = "files";
+            input.multiple = false;
+            fileInputsDiv.appendChild(document.createElement("br"));
+            fileInputsDiv.appendChild(input);
+          }
+        });
+    </script>
   </body>
 </html>
