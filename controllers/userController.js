@@ -57,8 +57,7 @@ exports.postSignupPage = [
         });
       }
       //----------
-      const { firstName, lastName, username, email, password, adminCode } =
-        req.body;
+      const { username, email, password } = req.body;
 
       const newUser = await User.create({
         username: username,
@@ -67,7 +66,10 @@ exports.postSignupPage = [
       });
       res
         .status(201)
-        .json({ message: `New user created succesfully`, user: newUser });
+        .json({
+          message: `New user created succesfully`,
+          user: newUser.username,
+        });
     } catch (err) {
       res
         .status(500)

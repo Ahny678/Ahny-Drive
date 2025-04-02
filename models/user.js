@@ -43,7 +43,6 @@ User.init(
     // Other model options go here
     sequelize,
     modelName: "User",
-    updatedAt: "updateTimestamp",
   }
 );
 
