@@ -1,5 +1,6 @@
 const upload = require("../config/cloud");
 const File = require("../models/file");
+const Folder = require("../models/folder");
 exports.getUpload = (req, res) => {
   const userId = req.user.id;
   res.render("upload", { userId: userId });
@@ -42,3 +43,29 @@ exports.postUpload = [
     }
   },
 ];
+
+exports.getNewFolder = (req, res) => {
+  const userId = req.user.id;
+  res.render("newFolder", { userId: userId });
+};
+
+exports.postNewFolder = async (req, res) => {
+  try {
+    if (!req.body.name) {
+      return res
+        .status(400)
+        .json({ message: "Bad request. Give an folder name" });
+    } else {
+      const folderName = req.body.name;
+      await Folder.create({
+        name: folderName,
+        userId: req.user.id,
+      });
+      res.status(201).json({ message: `${folderName} created succesfully` });
+    }
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: err.message });
+  }
+};
