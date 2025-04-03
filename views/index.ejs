@@ -1,13 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= title %></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/index.css" />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <p><a href="/Adrive/<%= userId %>/upload">Upload something</a></p>
-    <p><a href="/Adrive/<%= userId %>/newFolder">Create New Folder</a></p>
+    <div class="container">
+      <h1><%= title %></h1>
+      <p>Welcome to <%= title %></p>
+
+      <!-- Folders Section -->
+      <% if (folders && folders.length > 0) { %>
+      <h2>Folders</h2>
+      <div class="grid">
+        <% folders.forEach(function(folder) { %>
+        <a href="/Adrive/<%= userId %>/<%= folder.id %>" class="folder">
+          📁 <br />
+          <%= folder.name %>
+        </a>
+        <% }); %>
+      </div>
+      <% } %>
+
+      <!-- Files Section -->
+      <% if (loneFiles && loneFiles.length > 0) { %>
+      <h2>Files</h2>
+      <div class="grid">
+        <% loneFiles.forEach(function(file) { %>
+        <a href="/Adrive/<%= userId %>/file/<%= file.id %>" class="file">
+          📄 <br />
+          <%= file.name %>
+        </a>
+        <% }); %>
+      </div>
+      <% } %>
+
+      <!-- Actions -->
+      <div class="actions">
+        <a href="/Adrive/<%= userId %>/upload" class="btn btn-upload"
+          >Upload File</a
+        >
+        <a href="/Adrive/<%= userId %>/newFolder" class="btn btn-folder"
+          >Create New Folder</a
+        >
+      </div>
+    </div>
   </body>
 </html>
