@@ -13,33 +13,42 @@ exports.postUpload = [
         return res.status(400).json({ message: "No files uploaded" });
       }
 
-      const uploadedFiles = req.files.map(async (file) => {
-        const fileType = file.mimetype.startsWith("image/")
-          ? "photo"
-          : file.mimetype.startsWith("video/")
-          ? "video"
-          : "document";
+      const fileNames = req.body.fileNames; // Get file names from the form
+      const fileNamesArray = Array.isArray(fileNames) ? fileNames : [fileNames]; // Ensure it's an array
 
-        return await File.create({
-          name: file.originalname,
-          type: fileType,
-          url: file.path,
-          size: file.size,
-          userId: req.user.id,
-          folderId: req.body.folderId || null,
-        });
-      });
+      if (fileNamesArray.length !== req.files.length) {
+        return res
+          .status(400)
+          .json({ message: "Mismatch between files and names" });
+      }
 
-      await Promise.all(uploadedFiles);
+      // Store files with custom names
+      const uploadedFiles = await Promise.all(
+        req.files.map(async (file, index) => {
+          const fileType = file.mimetype.startsWith("image/")
+            ? "photo"
+            : file.mimetype.startsWith("video/")
+            ? "video"
+            : "document";
 
-      res.status(200).json({
-        message: "Files uploaded successfully",
-        files: req.files.map((file) => file.path),
-      });
+          return await File.create({
+            name: fileNamesArray[index], // Use the custom name provided by the user
+            type: fileType,
+            url: file.path,
+            size: file.size,
+            userId: req.user.id,
+            folderId: req.body.folderId || null,
+          });
+        })
+      );
+
+      res
+        .status(200)
+        .json({ message: "Files uploaded successfully", files: uploadedFiles });
     } catch (err) {
       res
         .status(500)
-        .json({ message: "Internal Server Error", error: err.message });
+        .json({ message: "Error uploading files", error: err.message });
     }
   },
 ];

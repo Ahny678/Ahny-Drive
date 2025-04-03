@@ -24,7 +24,14 @@
 
       <div id="fileInputs">
         <label>Upload file:</label>
-        <input type="file" name="files" multiple />
+        <input type="file" name="files" required />
+        <label>File Name:</label>
+        <input
+          type="text"
+          name="fileNames"
+          placeholder="Enter file name"
+          required
+        />
       </div>
 
       <button type="submit">Upload</button>
@@ -39,12 +46,28 @@
           fileInputsDiv.innerHTML = "";
 
           for (let i = 0; i < fileCount; i++) {
-            let input = document.createElement("input");
-            input.type = "file";
-            input.name = "files";
-            input.multiple = false;
+            let fileLabel = document.createElement("label");
+            fileLabel.textContent = "Upload file:";
+
+            let fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.name = "files";
+            fileInput.required = true;
+
+            let nameLabel = document.createElement("label");
+            nameLabel.textContent = "File Name:";
+
+            let nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.name = "fileNames";
+            nameInput.placeholder = "Enter file name";
+            nameInput.required = true;
+
+            fileInputsDiv.appendChild(fileLabel);
+            fileInputsDiv.appendChild(fileInput);
+            fileInputsDiv.appendChild(nameLabel);
+            fileInputsDiv.appendChild(nameInput);
             fileInputsDiv.appendChild(document.createElement("br"));
-            fileInputsDiv.appendChild(input);
           }
         });
     </script>
