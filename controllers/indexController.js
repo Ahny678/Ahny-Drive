@@ -32,7 +32,14 @@ const getAllLoneFiles = async (req) => {
   }
 };
 
-exports.getAllFilesInFolder = (req, res) => {};
+exports.getAllFilesInFolder = async (req, res) => {
+  const { userId, folderId } = req.params;
+  const affiliatedFiles = await File.findAll({
+    where: { folderId: folderId, userId: userId },
+  });
+
+  res.render("viewFolder", { files: affiliatedFiles, userId: userId });
+};
 
 exports.Auther = (req, res, next) => {
   if (req.isAuthenticated()) {
