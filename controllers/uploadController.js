@@ -1,10 +1,13 @@
 const upload = require("../config/cloud");
 const File = require("../models/file");
 const Folder = require("../models/folder");
-exports.getUpload = (req, res) => {
+
+exports.getUpload = async (req, res) => {
   const userId = req.user.id;
-  res.render("upload", { userId: userId });
+  const folders = await Folder.findAll({ where: { userId: userId } });
+  res.render("upload", { userId: userId, folders: folders });
 };
+
 exports.postUpload = [
   upload.array("files"),
   async (req, res) => {
@@ -13,8 +16,8 @@ exports.postUpload = [
         return res.status(400).json({ message: "No files uploaded" });
       }
 
-      const fileNames = req.body.fileNames; // Get file names from the form
-      const fileNamesArray = Array.isArray(fileNames) ? fileNames : [fileNames]; // Ensure it's an array
+      const { fileNames, folderId, newFolder } = req.body;
+      const fileNamesArray = Array.isArray(fileNames) ? fileNames : [fileNames];
 
       if (fileNamesArray.length !== req.files.length) {
         return res
@@ -22,10 +25,23 @@ exports.postUpload = [
           .json({ message: "Mismatch between files and names" });
       }
 
-      // Store files with custom names
+      let assignedFolderId = null;
+
+      // If user entered a new folder name, create it
+      if (newFolder) {
+        const createdFolder = await Folder.create({
+          name: newFolder,
+          userId: req.user.id,
+        });
+        assignedFolderId = createdFolder.id;
+      } else if (folderId !== null) {
+        assignedFolderId = folderId;
+      }
+
+      // Store files with custom names and assigned folder
       const uploadedFiles = await Promise.all(
         req.files.map(async (file, index) => {
-          const fileType = file.mimetype.startsWith("image/")
+          const detectedType = file.mimetype.startsWith("image/")
             ? "photo"
             : file.mimetype.startsWith("video/")
             ? "video"
@@ -33,11 +49,11 @@ exports.postUpload = [
 
           return await File.create({
             name: fileNamesArray[index], // Use the custom name provided by the user
-            type: fileType,
+            type: detectedType,
             url: file.path,
             size: file.size,
             userId: req.user.id,
-            folderId: req.body.folderId || null,
+            folderId: assignedFolderId, // Assign the correct folder ID (or null)
           });
         })
       );

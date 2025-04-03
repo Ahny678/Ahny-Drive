@@ -2,7 +2,6 @@ const { Model, DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 const Folder = require("./folder");
 const User = require("./user");
-console.log("Sequelize instance:", sequelize);
 class File extends Model {}
 
 File.init(

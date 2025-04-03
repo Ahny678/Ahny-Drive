@@ -12,16 +12,32 @@
       method="post"
       enctype="multipart/form-data"
     >
-      <label for="fileType">Select file type:</label>
-      <select id="fileType" name="fileType">
-        <option value="video">Video</option>
-        <option value="photo">Photo</option>
-        <option value="document">Document</option>
-      </select>
-
+      <!-- COUNTER -->
       <label for="fileCount">Number of files:</label>
       <input type="number" id="fileCount" name="fileCount" min="1" value="1" />
+      <br />
 
+      <!-- Folder Selection -->
+      <label for="existingFolder">Select Existing Folder:</label>
+      <select id="existingFolder" name="folderId">
+        <option value="">--No Folder--</option>
+        <% folders.forEach(function(folder) { %>
+        <option value="<%= folder.id %>"><%= folder.name %></option>
+        <% }); %>
+      </select>
+      <br />
+
+      <!-- NEW FOLDER -->
+      <label for="newFolder">Or Create a New Folder:</label>
+      <input
+        type="text"
+        id="newFolder"
+        name="newFolder"
+        placeholder="Enter new folder name"
+      />
+      <br />
+
+      <!-- UPLOAD FILES -->
       <div id="fileInputs">
         <label>Upload file:</label>
         <input type="file" name="files" required />
@@ -33,43 +49,67 @@
           required
         />
       </div>
-
+      <br />
       <button type="submit">Upload</button>
     </form>
 
     <script>
-      document
-        .getElementById("fileCount")
-        .addEventListener("input", function () {
-          let fileCount = this.value;
-          let fileInputsDiv = document.getElementById("fileInputs");
-          fileInputsDiv.innerHTML = "";
+      document.addEventListener("DOMContentLoaded", function () {
+        const existingFolderDropdown =
+          document.getElementById("existingFolder");
+        const newFolderInput = document.getElementById("newFolder");
 
-          for (let i = 0; i < fileCount; i++) {
-            let fileLabel = document.createElement("label");
-            fileLabel.textContent = "Upload file:";
-
-            let fileInput = document.createElement("input");
-            fileInput.type = "file";
-            fileInput.name = "files";
-            fileInput.required = true;
-
-            let nameLabel = document.createElement("label");
-            nameLabel.textContent = "File Name:";
-
-            let nameInput = document.createElement("input");
-            nameInput.type = "text";
-            nameInput.name = "fileNames";
-            nameInput.placeholder = "Enter file name";
-            nameInput.required = true;
-
-            fileInputsDiv.appendChild(fileLabel);
-            fileInputsDiv.appendChild(fileInput);
-            fileInputsDiv.appendChild(nameLabel);
-            fileInputsDiv.appendChild(nameInput);
-            fileInputsDiv.appendChild(document.createElement("br"));
+        // Check folder selection change
+        existingFolderDropdown.addEventListener("change", function () {
+          if (this.value) {
+            newFolderInput.value = ""; // Clear input field
+            newFolderInput.disabled = true; // Disable new folder input
+          } else {
+            newFolderInput.disabled = false; // Enable if no folder is selected
           }
         });
+
+        // Check new folder input
+        newFolderInput.addEventListener("input", function () {
+          if (this.value.trim()) {
+            existingFolderDropdown.value = ""; // Reset dropdown selection
+          }
+        });
+
+        // Dynamic file inputs based on file count
+        document
+          .getElementById("fileCount")
+          .addEventListener("input", function () {
+            let fileCount = this.value;
+            let fileInputsDiv = document.getElementById("fileInputs");
+            fileInputsDiv.innerHTML = ""; // Clear previous file inputs
+
+            for (let i = 0; i < fileCount; i++) {
+              let fileLabel = document.createElement("label");
+              fileLabel.textContent = "Upload file:";
+
+              let fileInput = document.createElement("input");
+              fileInput.type = "file";
+              fileInput.name = "files";
+              fileInput.required = true;
+
+              let nameLabel = document.createElement("label");
+              nameLabel.textContent = "File Name:";
+
+              let nameInput = document.createElement("input");
+              nameInput.type = "text";
+              nameInput.name = "fileNames";
+              nameInput.placeholder = "Enter file name";
+              nameInput.required = true;
+
+              fileInputsDiv.appendChild(fileLabel);
+              fileInputsDiv.appendChild(fileInput);
+              fileInputsDiv.appendChild(nameLabel);
+              fileInputsDiv.appendChild(nameInput);
+              fileInputsDiv.appendChild(document.createElement("br"));
+            }
+          });
+      });
     </script>
   </body>
 </html>
