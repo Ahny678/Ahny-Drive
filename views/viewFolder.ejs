@@ -10,10 +10,13 @@
     <h2>Files</h2>
     <div class="grid">
       <% files.forEach(function(file) { %>
-      <a href="/Adrive/<%= userId %>/<%= file.id %>" class="file">
+      <a href="/Adrive/file/<%= file.id %>/open" class="file">
         📁 <br />
         <%= file.name %>
       </a>
+      <form action="/Adrive/<%= file.id %>/delete" method="POST">
+        <button type="submit">Delete Message</button>
+      </form>
       <% }); %>
     </div>
     <% } %>

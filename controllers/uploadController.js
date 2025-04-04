@@ -2,13 +2,13 @@ const upload = require("../config/cloud");
 const File = require("../models/file");
 const Folder = require("../models/folder");
 
-exports.getUpload = async (req, res) => {
+exports.getNewFile = async (req, res) => {
   const userId = req.user.id;
   const folders = await Folder.findAll({ where: { userId: userId } });
   res.render("upload", { userId: userId, folders: folders });
 };
 
-exports.postUpload = [
+exports.postNewFile = [
   upload.array("files"),
   async (req, res) => {
     try {
