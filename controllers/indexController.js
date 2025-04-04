@@ -121,10 +121,28 @@ exports.shareFolder = async (req, res) => {
   } catch (err) {}
 };
 
-exports.viewSharedFolder = (req, res) => {
+// Viewing the shared folder
+exports.viewSharedFolder = async (req, res) => {
   try {
-  } catch (err) {}
+    const { shareId } = req.params;
+    const folder = await Folder.findOne({ where: { shareId } });
+
+    if (!folder) {
+      return res.status(404).json({ message: "Shared folder not found" });
+    }
+
+    if (new Date() > folder.expiresAt) {
+      return res.status(403).json({ message: "This share link has expired" });
+    }
+
+    res.status(200).json({ folder });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error retrieving folder", error: err.message });
+  }
 };
+
 exports.Auther = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
