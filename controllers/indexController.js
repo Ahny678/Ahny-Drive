@@ -1,5 +1,6 @@
 const File = require("../models/file");
 const Folder = require("../models/folder");
+const { v4: uuidv4 } = require("uuid");
 
 exports.Adrive = async (req, res) => {
   const loneFiles = await getAllLoneFiles(req);
@@ -100,6 +101,30 @@ exports.deleteFolder = async (req, res) => {
   }
 };
 
+exports.shareFolder = async (req, res) => {
+  try {
+    const { folderId } = req.params;
+    const { duration } = req.body;
+
+    if (!folderId || !duration) {
+      return res.status(400).json({ message: "Missing folderId or duration" });
+    }
+
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getHours() + parseInt(duration));
+
+    const shareId = uuidv4();
+    await Folder.update({ shareId, expiresAt }, { where: { id: folderId } });
+    res
+      .status(200)
+      .json({ link: `http://localhost:3000/Adrive/share/${shareId}` });
+  } catch (err) {}
+};
+
+exports.viewSharedFolder = (req, res) => {
+  try {
+  } catch (err) {}
+};
 exports.Auther = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();

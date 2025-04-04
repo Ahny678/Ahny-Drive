@@ -18,6 +18,11 @@
           📁 <br />
           <%= folder.name %>
         </a>
+        <form action="/Adrive/share/<%= folder.id %>" method="POST">
+          <label for="duration">hours to expiration</label>
+          <input type="text" name="duration" />
+          <button type="submit">Share Folder</button>
+        </form>
         <form action="/Adrive/<%= folder.id %>/delete" method="POST">
           <button type="submit">Delete Folder</button>
         </form>

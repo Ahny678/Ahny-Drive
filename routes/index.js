@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 const indexController = require("../controllers/indexController");
 
+router.post("/share/:folderId", indexController.shareFolder);
+router.get("/share/:shareId", indexController.viewSharedFolder);
 router.get("/file/:fileId/open", indexController.openFile);
 router.post("/:folderId/delete", indexController.deleteFolder);
 router.post("/:fileId/delete", indexController.deleteFile);
