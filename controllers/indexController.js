@@ -38,7 +38,7 @@ exports.getAllFilesInFolder = async (req, res) => {
     where: { folderId: folderId, userId: userId },
   });
 
-  res.render("viewFolder", { files: affiliatedFiles, userId: userId });
+  res.render("viewFolder", { files: affiliatedFiles, folderId: folderId });
 };
 
 exports.openFile = async (req, res) => {
@@ -59,7 +59,7 @@ exports.deleteFile = async (req, res) => {
     const { fileId } = req.params;
     if (fileId) {
       await File.destroy({ where: { id: fileId } });
-      res.status(200).json({ message: "Successful deletion" });
+      res.status(200).json({ message: "Successful file deletion" });
     } else {
       return res
         .status(400)
@@ -69,8 +69,36 @@ exports.deleteFile = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-exports.deleteAllFilesInFolder = async (req, res) => {};
-exports.deleteFolder = async (req, res) => {};
+exports.deleteAllFilesInFolder = async (req, res) => {
+  try {
+    const { folderId } = req.params;
+    if (folderId) {
+      await File.destroy({ where: { folderId: folderId } });
+      res.status(200).json({ message: "Successful deletion of files" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Bad request. No folder id provided" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+exports.deleteFolder = async (req, res) => {
+  try {
+    const { folderId } = req.params;
+    if (folderId) {
+      await Folder.destroy({ where: { id: folderId } });
+      res.status(200).json({ message: "Successful deletion of folder" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Bad request. No folder id provided" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 exports.Auther = (req, res, next) => {
   if (req.isAuthenticated()) {

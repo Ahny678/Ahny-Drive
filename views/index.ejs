@@ -18,6 +18,9 @@
           📁 <br />
           <%= folder.name %>
         </a>
+        <form action="/Adrive/<%= folder.id %>/delete" method="POST">
+          <button type="submit">Delete Folder</button>
+        </form>
         <% }); %>
       </div>
       <% } %>
@@ -40,10 +43,10 @@
 
       <!-- Actions -->
       <div class="actions">
-        <a href="/Adrive/<%= userId %>/upload" class="btn btn-upload"
+        <a href="/Adrive/<%= userId %>/upload/get" class="btn btn-upload"
           >Upload File</a
         >
-        <a href="/Adrive/<%= userId %>/newFolder" class="btn btn-folder"
+        <a href="/Adrive/<%= userId %>/newFolder/get" class="btn btn-folder"
           >Create New Folder</a
         >
       </div>
