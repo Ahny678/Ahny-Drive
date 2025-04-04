@@ -20,6 +20,15 @@ Folder.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    shareId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
+    expiresAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
     // Other model options go here
