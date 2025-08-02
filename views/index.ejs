@@ -39,8 +39,13 @@
           📄 <br />
           <%= file.name %>
         </a>
+        <a
+          href="<%= file.url.replace('/upload/', '/upload/fl_attachment:' + file.name + '/') %>"
+          >Download File</a
+        >
+
         <form action="/Adrive/<%= file.id %>/delete" method="POST">
-          <button type="submit">Delete Message</button>
+          <button type="submit">Delete File</button>
         </form>
         <% }); %>
       </div>
@@ -48,10 +53,10 @@
 
       <!-- Actions -->
       <div class="actions">
-        <a href="/Adrive/<%= userId %>/upload/get" class="btn btn-upload"
+        <a href="/Adrive/upload/file/<%= userId %>" class="btn btn-upload"
           >Upload File</a
         >
-        <a href="/Adrive/<%= userId %>/newFolder/get" class="btn btn-folder"
+        <a href="/Adrive/upload/folder/<%= userId %>" class="btn btn-folder"
           >Create New Folder</a
         >
       </div>
